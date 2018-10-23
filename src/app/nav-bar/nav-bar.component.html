@@ -1,40 +1,59 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <a class="navbar-brand" routerLink="/">LOGO</a>
-
-  <button 
-    (click)="isCollapsed = !isCollapsed" 
-    class="navbar-toggler" 
+<nav class="navbar navbar-expand-md navbar-dark bg-secondary fixed-top" >
+  <a class="navbar-brand" routerLink="/"><img class="brand-nav-bar text-center" src="assets/images/logo-navbar.png" alt="logo"></a>
+  
+  <!--Button menu mobile -->
+  <button *ngIf="!appUser"
+      class="navbar-toggler hidden-sm-up" 
+      type="button" 
+      (click)="collapsed()" 
+      data-target="#navbarsDefault" 
+      aria-controls="navbarsDefault" 
+      aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+  </button>
+    
+  <button *ngIf="appUser" 
+    class="navbar-toggler hidden-sm-up" 
     type="button" 
-    data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
+    (click)="collapsed()" 
+    data-target="#navbarsDefault" 
+    aria-controls="navbarsDefault" 
+    aria-expanded="false" aria-label="Toggle navigation">
+    <img class="avatar" [src]="appUser.avatar" [alt]="appUser.name"> 
+    <!-- #TODO: add avatar generic -->
   </button>
 
-  <div [ngbCollapse]="isCollapsed" class="collapse navbar-collapse" id="navbarSupportedContent">
+  <div [ngbCollapse]="isNavbarCollapsed" class="collapse navbar-collapse" id="navbarsDefault">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item">
-        <a class="nav-link" routerLink="products">Productos</a>
+        <a class="nav-link" (click)="collapsed()" routerLink="products">Productos</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" routerLink="shopping-cart">Carrito</a>
+        <a class="nav-link" (click)="collapsed()" routerLink="shopping-cart">Carrito</a>
+      </li>      
+      <li class="nav-item" *ngIf="!appUser">
+        <a class="nav-link" (click)="collapsed()" routerLink="/login">Login</a>
       </li>
-      <ng-template #anonymousUser>
-          <li class="nav-item">
-              <a class="nav-link" routerLink="login">Login</a>
+      <ng-container *ngIf="appUser">
+          <li class="nav-item dropdown" ngbDropdown>
+              <a class="nav-link dropdown-toggle" id="id01" ngbDropdownToggle>
+                <img class="d-none d-sm-inline avatar " [src]="appUser.avatar" [alt]="appUser.name"> {{ appUser.name }}
+              </a>
+              <div class="dropdown-menu" aria-labelledby="id01" ngbDropdownMenu>
+                <a class="dropdown-item" (click)="collapsed();" routerLink="profile">Profile</a>
+                <a class="dropdown-item" (click)="collapsed();" routerLink="my/orders">My Orders</a>
+                <a class="dropdown-item" (click)="collapsed();" routerLink="check-out">Check Out</a>
+                <ng-container *ngIf="isAdmin">
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" (click)="collapsed();" routerLink="admin/products">Manage Products</a>
+                    <a class="dropdown-item" (click)="collapsed();" routerLink="admin/categories">Manage Categorys</a>
+                    <a class="dropdown-item" (click)="collapsed();" routerLink="admin/users">Manage Users</a>
+                </ng-container>                
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item logout" (click)="collapsed(); logout()">Logout</a>
+              </div>
             </li>
-      </ng-template>
-      <li ngbDropdown *ngIf="auth.user$ | async as user; else anonymousUser" class="nav-item dropdown"> 
-        <a ngbDropdownToggle class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          <img class="avatar" [src]="user.photoURL" [alt]="user.displayName"> {{ user.displayName }}
-        </a>
-        <div ngbDropdownMenu class="dropdown-menu" aria-labelledby="navbarDropdown">
-          <a class="dropdown-item" routerLink="/profile">Profile</a>
-          <a class="dropdown-item" routerLink="/my/orders">My Orders</a>        
-          <a class="dropdown-item" routerLink="/admin/products">Manage Products</a>
-          <a class="dropdown-item" routerLink="/admin/categoties">Manage Categorys</a>
-          <!-- <div class="dropdown-divider"></div> -->
-          <a class="dropdown-item" (click)="logout()" href="#">Log Out</a>
-        </div>
-      </li>
+      </ng-container>
     </ul>
   </div>
 </nav>

@@ -1,8 +1,22 @@
 .dropdown-toggle{
     cursor: pointer;
 }
+
+.navbar-brand{
+   padding: 3px;
+    .brand-nav-bar{
+        width: 100px;
+    }
+}
+
 .avatar{
     width: 32px;
     height: 32px;
     border-radius: 50%;
+}
+
+.dropdown-item{
+    &.logout{
+        cursor: pointer;
+    }
 }
